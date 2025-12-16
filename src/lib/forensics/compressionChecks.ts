@@ -225,6 +225,9 @@ export function checkUniformAreas(file: ImageFile): CheckResult {
   let summary = '';
   let notes = '';
   
+  // Generate overlay showing uniform areas
+  const overlay = generateUniformAreasOverlay(file.imageData, analysis.uniformMap);
+  
   if (analysis.uniformRatio > 0.3) {
     status = 'warn';
     summary = `Large uniform areas detected (${(analysis.uniformRatio * 100).toFixed(0)}%)`;
@@ -248,13 +251,14 @@ export function checkUniformAreas(file: ImageFile): CheckResult {
     },
     confidence: 0.5,
     notes,
+    overlay,
   };
 }
 
 /**
  * Analyze image for uniform areas
  */
-function analyzeUniformity(imageData: ImageData): { uniformRatio: number } {
+function analyzeUniformity(imageData: ImageData): { uniformRatio: number; uniformMap: number[][] } {
   const { width, height, data } = imageData;
   const blockSize = 16;
   
@@ -262,13 +266,15 @@ function analyzeUniformity(imageData: ImageData): { uniformRatio: number } {
   const blocksY = Math.floor(height / blockSize);
   
   if (blocksX < 2 || blocksY < 2) {
-    return { uniformRatio: 0 };
+    return { uniformRatio: 0, uniformMap: [] };
   }
   
   let uniformBlocks = 0;
   let totalBlocks = 0;
+  const uniformMap: number[][] = [];
   
   for (let by = 0; by < blocksY; by++) {
+    uniformMap[by] = [];
     for (let bx = 0; bx < blocksX; bx++) {
       const values: number[] = [];
       
@@ -285,6 +291,10 @@ function analyzeUniformity(imageData: ImageData): { uniformRatio: number } {
       
       const variance = standardDeviation(values);
       
+      // Store uniformity score (inverse of variance, normalized)
+      const uniformityScore = Math.max(0, 1 - variance / 10);
+      uniformMap[by][bx] = uniformityScore;
+      
       // Very low variance indicates uniform area
       if (variance < 3) {
         uniformBlocks++;
@@ -294,7 +304,46 @@ function analyzeUniformity(imageData: ImageData): { uniformRatio: number } {
     }
   }
   
-  return { uniformRatio: totalBlocks > 0 ? uniformBlocks / totalBlocks : 0 };
+  return { uniformRatio: totalBlocks > 0 ? uniformBlocks / totalBlocks : 0, uniformMap };
+}
+
+/**
+ * Generate overlay showing uniform areas
+ */
+function generateUniformAreasOverlay(imageData: ImageData, uniformMap: number[][]): ImageData {
+  const { width, height } = imageData;
+  const overlay = new ImageData(width, height);
+  const blockSize = 16;
+  
+  for (let by = 0; by < uniformMap.length; by++) {
+    for (let bx = 0; bx < uniformMap[by].length; bx++) {
+      const score = uniformMap[by][bx];
+      
+      // Map score to color: low uniform (blue) to high uniform (red)
+      const r = Math.floor(score * 255);
+      const g = Math.floor((1 - score) * 128);
+      const b = Math.floor((1 - score) * 255);
+      const a = Math.floor(score * 200); // More transparent for less uniform areas
+      
+      // Fill the block
+      for (let dy = 0; dy < blockSize; dy++) {
+        for (let dx = 0; dx < blockSize; dx++) {
+          const x = bx * blockSize + dx;
+          const y = by * blockSize + dy;
+          
+          if (x < width && y < height) {
+            const idx = (y * width + x) * 4;
+            overlay.data[idx] = r;
+            overlay.data[idx + 1] = g;
+            overlay.data[idx + 2] = b;
+            overlay.data[idx + 3] = a;
+          }
+        }
+      }
+    }
+  }
+  
+  return overlay;
 }
 
 /**

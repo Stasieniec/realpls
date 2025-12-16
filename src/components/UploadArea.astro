@@ -2,7 +2,7 @@
 // UploadArea - Client-side interactive component
 ---
 
-<div class="upload-area" id="upload-area" tabindex="0" role="button" aria-label="Upload image for analysis">
+<div class="upload-area" id="upload-area">
   <input 
     type="file" 
     id="file-input" 
@@ -13,11 +13,11 @@
   
   <div class="upload-content">
     <p class="upload-title">drop image here</p>
-    <p class="upload-subtitle" id="upload-description">or click to select · jpg, png, gif, webp</p>
+    <p class="upload-subtitle" id="upload-description">or</p>
     
     <div class="upload-actions">
-      <button type="button" class="demo-button" id="demo-button">
-        try demo image
+      <button type="button" class="select-button" id="select-button">
+        select image
       </button>
     </div>
   </div>
@@ -34,15 +34,8 @@
     border: 1px solid var(--color-border);
     padding: var(--space-16) var(--space-6);
     text-align: center;
-    cursor: pointer;
     transition: all var(--transition-normal);
     background: var(--color-bg);
-  }
-  
-  .upload-area:hover,
-  .upload-area:focus-visible {
-    border-color: var(--color-border-subtle);
-    background: var(--color-bg-subtle);
   }
   
   .upload-area.dragover {
@@ -51,11 +44,7 @@
   }
   
   .file-input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 1;
+    display: none;
   }
   
   .upload-content {
@@ -77,11 +66,11 @@
     color: var(--color-text-muted);
   }
   
-  .demo-button {
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    background: transparent;
+  .select-button {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-bg);
     border: 1px solid var(--color-border);
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -89,8 +78,8 @@
     z-index: 10;
   }
   
-  .demo-button:hover {
-    color: var(--color-text);
+  .select-button:hover {
+    background: var(--color-bg-subtle);
     border-color: var(--color-text-muted);
   }
   

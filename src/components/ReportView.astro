@@ -20,6 +20,11 @@
       <div class="preview-image-container" id="preview-container">
         <img id="preview-image" alt="Uploaded image preview" />
         <canvas id="overlay-canvas" class="overlay-canvas hidden"></canvas>
+        <button type="button" class="maximize-button" id="maximize-button" title="Maximize image">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 2H6M2 2V6M2 2L6 6M14 2H10M14 2V6M14 2L10 6M2 14H6M2 14V10M2 14L6 10M14 14H10M14 14V10M14 14L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
       
       <div class="preview-info" id="preview-info">
@@ -83,6 +88,39 @@
     
     <div class="tab-content" id="tab-content">
       <!-- Content populated by JavaScript -->
+    </div>
+  </div>
+  
+  <!-- Fullscreen Image Modal -->
+  <div class="image-modal hidden" id="image-modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">image viewer</div>
+      <button type="button" class="modal-close" id="modal-close" title="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="modal-image-container">
+        <img id="modal-image" alt="Full size image" />
+        <canvas id="modal-overlay-canvas" class="overlay-canvas hidden"></canvas>
+      </div>
+    </div>
+    
+    <div class="modal-controls">
+      <div class="modal-control-row">
+        <label>overlay</label>
+        <select id="modal-overlay-select" class="modal-select">
+          <option value="none">none</option>
+        </select>
+      </div>
+      <div class="modal-control-row">
+        <label for="modal-opacity-slider">opacity</label>
+        <input type="range" id="modal-opacity-slider" min="0" max="100" value="60" />
+        <span id="modal-opacity-value" class="opacity-value">60%</span>
+      </div>
     </div>
   </div>
 </div>
@@ -175,6 +213,29 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
     mix-blend-mode: screen;
+  }
+  
+  .maximize-button {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    padding: var(--space-2);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--transition-fast);
+    z-index: 10;
+  }
+  
+  .preview-image-container:hover .maximize-button {
+    opacity: 1;
+  }
+  
+  .maximize-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: var(--color-text-muted);
   }
   
   .preview-info {
@@ -535,6 +596,124 @@
     text-align: center;
     padding: var(--space-10);
     color: var(--color-text-muted);
+  }
+  
+  /* Image Modal */
+  .image-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .modal-title {
+    font-size: var(--text-base);
+    color: var(--color-text);
+  }
+  
+  .modal-close {
+    padding: var(--space-2);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .modal-close:hover {
+    border-color: var(--color-text-muted);
+    background: var(--color-bg-subtle);
+  }
+  
+  .modal-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    overflow: hidden;
+  }
+  
+  .modal-image-container {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #modal-image {
+    max-width: 100%;
+    max-height: calc(100vh - 200px);
+    object-fit: contain;
+  }
+  
+  #modal-overlay-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  
+  .modal-controls {
+    display: flex;
+    gap: var(--space-6);
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  
+  @media (max-width: 600px) {
+    .modal-controls {
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+  }
+  
+  .modal-control-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  
+  .modal-control-row label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    min-width: 60px;
+  }
+  
+  .modal-select {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    min-width: 200px;
+  }
+  
+  .modal-control-row input[type="range"] {
+    width: 200px;
+    accent-color: var(--color-text);
+  }
+  
+  .opacity-value {
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    min-width: 40px;
   }
   
   .hidden {

@@ -51,7 +51,7 @@ import ReportView from '../components/ReportView.astro';
   const uploadContent = uploadArea.querySelector('.upload-content')!;
   const uploadLoading = document.getElementById('upload-loading')!;
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
-  const demoButton = document.getElementById('demo-button')!;
+  const selectButton = document.getElementById('select-button')!;
   const resetButton = document.getElementById('reset-button')!;
   const downloadButton = document.getElementById('download-button')!;
   
@@ -73,6 +73,16 @@ import ReportView from '../components/ReportView.astro';
   const overlaySelect = document.getElementById('overlay-select') as HTMLSelectElement;
   const opacitySlider = document.getElementById('opacity-slider') as HTMLInputElement;
   const tabContent = document.getElementById('tab-content')!;
+  
+  // Modal elements
+  const maximizeButton = document.getElementById('maximize-button')!;
+  const imageModal = document.getElementById('image-modal')!;
+  const modalClose = document.getElementById('modal-close')!;
+  const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+  const modalOverlayCanvas = document.getElementById('modal-overlay-canvas') as HTMLCanvasElement;
+  const modalOverlaySelect = document.getElementById('modal-overlay-select') as HTMLSelectElement;
+  const modalOpacitySlider = document.getElementById('modal-opacity-slider') as HTMLInputElement;
+  const modalOpacityValue = document.getElementById('modal-opacity-value')!;
   
   // State
   let currentReport: ForensicReport | null = null;
@@ -122,18 +132,10 @@ import ReportView from '../components/ReportView.astro';
     }
   });
   
-  // Demo button
-  demoButton.addEventListener('click', async (e) => {
+  // Select button
+  selectButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    try {
-      const response = await fetch('/demo/sample.jpg');
-      const blob = await response.blob();
-      const file = new File([blob], 'demo-image.jpg', { type: 'image/jpeg' });
-      handleFile(file);
-    } catch (error) {
-      console.error('Failed to load demo image:', error);
-      alert('Failed to load demo image. Please try uploading your own image.');
-    }
+    fileInput.click();
   });
   
   // Reset button
@@ -162,6 +164,33 @@ import ReportView from '../components/ReportView.astro';
   
   opacitySlider.addEventListener('input', () => {
     updateOverlay();
+  });
+  
+  // Maximize button
+  maximizeButton.addEventListener('click', () => {
+    openImageModal();
+  });
+  
+  // Modal close
+  modalClose.addEventListener('click', () => {
+    closeImageModal();
+  });
+  
+  // Close modal on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+      closeImageModal();
+    }
+  });
+  
+  // Modal overlay controls
+  modalOverlaySelect.addEventListener('change', () => {
+    updateModalOverlay();
+  });
+  
+  modalOpacitySlider.addEventListener('input', () => {
+    modalOpacityValue.textContent = `${modalOpacitySlider.value}%`;
+    updateModalOverlay();
   });
   
   // Handle file upload
@@ -290,6 +319,7 @@ import ReportView from '../components/ReportView.astro';
       'noise-consistency': 'noise map',
       'edge-consistency': 'edge map',
       'ela': 'error level analysis',
+      'uniform-areas': 'uniform areas',
     };
     
     for (const [id] of overlays) {
@@ -326,6 +356,63 @@ import ReportView from '../components/ReportView.astro';
     ctx.putImageData(overlayData, 0, 0);
     
     overlayCanvas.classList.remove('hidden');
+  }
+  
+  function openImageModal() {
+    if (!currentImageFile) return;
+    
+    imageModal.classList.remove('hidden');
+    modalImage.src = currentImageFile.dataUrl;
+    
+    // Populate modal overlay select with same options
+    modalOverlaySelect.innerHTML = '<option value="none">none</option>';
+    
+    const overlayNames: Record<string, string> = {
+      'noise-consistency': 'noise map',
+      'edge-consistency': 'edge map',
+      'ela': 'error level analysis',
+      'uniform-areas': 'uniform areas',
+    };
+    
+    for (const [id] of overlays) {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = overlayNames[id] || id;
+      modalOverlaySelect.appendChild(option);
+    }
+    
+    // Set initial overlay to current selection
+    modalOverlaySelect.value = overlaySelect.value;
+    updateModalOverlay();
+  }
+  
+  function closeImageModal() {
+    imageModal.classList.add('hidden');
+    modalOverlayCanvas.classList.add('hidden');
+  }
+  
+  function updateModalOverlay() {
+    const selected = modalOverlaySelect.value;
+    const opacity = parseInt(modalOpacitySlider.value) / 100;
+    
+    if (selected === 'none' || !overlays.has(selected)) {
+      modalOverlayCanvas.classList.add('hidden');
+      return;
+    }
+    
+    const overlayData = overlays.get(selected)!;
+    const imageRect = modalImage.getBoundingClientRect();
+    
+    modalOverlayCanvas.width = overlayData.width;
+    modalOverlayCanvas.height = overlayData.height;
+    modalOverlayCanvas.style.width = `${imageRect.width}px`;
+    modalOverlayCanvas.style.height = `${imageRect.height}px`;
+    modalOverlayCanvas.style.opacity = String(opacity);
+    
+    const ctx = modalOverlayCanvas.getContext('2d')!;
+    ctx.putImageData(overlayData, 0, 0);
+    
+    modalOverlayCanvas.classList.remove('hidden');
   }
   
   function renderTabContent(tabName: string) {
