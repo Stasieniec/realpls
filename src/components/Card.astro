@@ -1,0 +1,38 @@
+---
+interface Props {
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { padding = 'md', class: className = '' } = Astro.props;
+---
+
+<div class:list={['card', `card--padding-${padding}`, className]}>
+  <slot />
+</div>
+
+<style>
+  .card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .card--padding-none {
+    padding: 0;
+  }
+  
+  .card--padding-sm {
+    padding: var(--space-3);
+  }
+  
+  .card--padding-md {
+    padding: var(--space-4);
+  }
+  
+  .card--padding-lg {
+    padding: var(--space-6);
+  }
+</style>
+

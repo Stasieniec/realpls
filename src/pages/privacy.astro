@@ -1,0 +1,251 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Privacy — realpls" description="Your privacy matters. Learn how realpls handles your data (spoiler: it doesn't).">
+  <Header />
+  
+  <main class="main container container-narrow">
+    <article class="content">
+      <header class="content-header">
+        <h1>Privacy Policy</h1>
+        <p class="lead">
+          Your images stay on your device. Always.
+        </p>
+      </header>
+      
+      <section class="section">
+        <h2>The Short Version</h2>
+        <div class="highlight-box">
+          <div class="highlight-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <ul>
+              <li>✓ Your images are processed 100% locally in your browser</li>
+              <li>✓ We never upload, store, or transmit your images</li>
+              <li>✓ We don't use cookies or tracking scripts</li>
+              <li>✓ We don't collect any personal information</li>
+              <li>✓ There is no backend server that sees your data</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      
+      <section class="section">
+        <h2>How It Works</h2>
+        <p>
+          When you upload an image to realpls, the file is read directly by your web browser using the 
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader" target="_blank" rel="noopener noreferrer">FileReader API</a>. 
+          The image data is then processed using the 
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener noreferrer">Canvas API</a> 
+          to perform forensic analysis.
+        </p>
+        <p>
+          All computation happens on your device. The image data never leaves your browser, never touches 
+          our servers (because there aren't any for this purpose), and is discarded from memory when you 
+          close the page or analyze a new image.
+        </p>
+      </section>
+      
+      <section class="section">
+        <h2>What We Don't Collect</h2>
+        <ul class="list">
+          <li><strong>Images:</strong> We never see, store, or have access to the images you analyze</li>
+          <li><strong>Personal data:</strong> No names, emails, accounts, or identification</li>
+          <li><strong>Usage data:</strong> We don't track which features you use or how long you stay</li>
+          <li><strong>Device information:</strong> We don't fingerprint your browser or collect device details</li>
+        </ul>
+      </section>
+      
+      <section class="section">
+        <h2>Static Hosting</h2>
+        <p>
+          This website is hosted as a static site on Cloudflare Pages. While Cloudflare may collect 
+          standard web server logs (IP addresses, timestamps, etc.) as part of their service, this is 
+          outside our control and governed by 
+          <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's privacy policy</a>.
+        </p>
+        <p>
+          We don't have access to these logs and don't use any analytics or tracking services.
+        </p>
+      </section>
+      
+      <section class="section">
+        <h2>Downloaded Reports</h2>
+        <p>
+          The "Download JSON" feature generates a report file locally in your browser. This file is 
+          created client-side and downloaded directly to your device. No data is sent to any server 
+          during this process.
+        </p>
+      </section>
+      
+      <section class="section">
+        <h2>External Resources</h2>
+        <p>
+          This site loads fonts from Google Fonts, which means Google may receive your IP address and 
+          some browser information. This is standard practice for most websites. If this concerns you, 
+          you can block Google Fonts using browser extensions or privacy tools.
+        </p>
+      </section>
+      
+      <section class="section">
+        <h2>Open Source</h2>
+        <p>
+          Don't take our word for it — the code is open for inspection. You can verify exactly what 
+          the application does by reviewing the source code. There are no hidden network requests, 
+          no telemetry, and no data collection mechanisms.
+        </p>
+      </section>
+      
+      <section class="section">
+        <h2>Contact</h2>
+        <p>
+          Questions about privacy? Reach out at 
+          <a href="https://swasilewski.com" target="_blank" rel="noopener noreferrer">swasilewski.com</a>.
+        </p>
+      </section>
+      
+      <div class="update-notice">
+        <p>Last updated: December 2024</p>
+      </div>
+      
+      <div class="back-link">
+        <a href="/">← Back to analyzer</a>
+      </div>
+    </article>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .main {
+    flex: 1;
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-10);
+  }
+  
+  .content {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+  }
+  
+  @media (max-width: 640px) {
+    .content {
+      padding: var(--space-6);
+    }
+  }
+  
+  .content-header {
+    margin-bottom: var(--space-10);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .content-header h1 {
+    margin-bottom: var(--space-4);
+  }
+  
+  .lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+  
+  .section {
+    margin-bottom: var(--space-8);
+  }
+  
+  .section h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .section p {
+    margin-bottom: var(--space-4);
+    line-height: var(--leading-relaxed);
+  }
+  
+  .highlight-box {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background: var(--color-ok-bg);
+    border: 1px solid var(--color-ok);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+  }
+  
+  .highlight-icon {
+    flex-shrink: 0;
+    color: var(--color-ok);
+  }
+  
+  .highlight-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .highlight-box li {
+    padding: var(--space-1) 0;
+    font-weight: 500;
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .list li {
+    position: relative;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-3);
+    line-height: var(--leading-relaxed);
+  }
+  
+  .list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent);
+    border-radius: 50%;
+  }
+  
+  .update-notice {
+    margin-top: var(--space-8);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .update-notice p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  
+  .back-link {
+    margin-top: var(--space-6);
+  }
+  
+  .back-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 500;
+  }
+</style>
+

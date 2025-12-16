@@ -1,0 +1,154 @@
+---
+// UploadArea - Client-side interactive component
+---
+
+<div class="upload-area" id="upload-area" tabindex="0" role="button" aria-label="Upload image for analysis">
+  <input 
+    type="file" 
+    id="file-input" 
+    accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
+    class="file-input"
+    aria-describedby="upload-description"
+  />
+  
+  <div class="upload-content">
+    <div class="upload-icon">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="8" width="40" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+        <circle cx="16" cy="20" r="4" stroke="currentColor" stroke-width="2"/>
+        <path d="M4 32L16 24L28 32L36 26L44 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    
+    <div class="upload-text">
+      <p class="upload-title">Drop an image here or click to browse</p>
+      <p class="upload-subtitle" id="upload-description">Supports JPG, PNG, GIF, WebP • Max 50MB</p>
+    </div>
+    
+    <div class="upload-actions">
+      <button type="button" class="upload-button" id="demo-button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Try demo image
+      </button>
+    </div>
+  </div>
+  
+  <div class="upload-loading hidden" id="upload-loading">
+    <div class="spinner"></div>
+    <p>Loading image...</p>
+  </div>
+</div>
+
+<style>
+  .upload-area {
+    position: relative;
+    border: 2px dashed var(--color-border-subtle);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    background: var(--color-bg-elevated);
+  }
+  
+  .upload-area:hover,
+  .upload-area:focus-visible {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+  
+  .upload-area.dragover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    transform: scale(1.01);
+  }
+  
+  .file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    pointer-events: none;
+  }
+  
+  .upload-icon {
+    color: var(--color-text-muted);
+  }
+  
+  .upload-title {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  
+  .upload-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  
+  .upload-actions {
+    position: relative;
+    z-index: 2;
+    margin-top: var(--space-2);
+  }
+  
+  .upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+    background: transparent;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .upload-button:hover {
+    background: var(--color-accent);
+    color: white;
+  }
+  
+  .upload-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  
+  .upload-loading p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+</style>
+

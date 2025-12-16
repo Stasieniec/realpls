@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://realpls.com/sitemap.xml
+

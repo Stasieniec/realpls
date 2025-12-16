@@ -1,0 +1,79 @@
+---
+
+---
+
+<footer class="footer">
+  <div class="footer-inner container">
+    <div class="footer-left">
+      <p class="privacy-note">
+        <svg class="privacy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L2 4V7.5C2 11.09 4.56 14.43 8 15.5C11.44 14.43 14 11.09 14 7.5V4L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 8L7.5 9.5L10 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Images are processed locally and never uploaded
+      </p>
+    </div>
+    
+    <div class="footer-right">
+      <span class="footer-text">Built by</span>
+      <a href="https://swasilewski.com" target="_blank" rel="noopener noreferrer" class="footer-link">
+        swasilewski.com
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: auto;
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-subtle);
+  }
+  
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  
+  .privacy-note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  
+  .privacy-icon {
+    color: var(--color-ok);
+    flex-shrink: 0;
+  }
+  
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  
+  .footer-text {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  
+  .footer-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+  
+  @media (max-width: 640px) {
+    .footer-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+
