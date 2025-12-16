@@ -63,7 +63,6 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-3);
-    pointer-events: none;
   }
   
   .upload-title {
@@ -78,12 +77,6 @@
     color: var(--color-text-muted);
   }
   
-  .upload-actions {
-    position: relative;
-    z-index: 2;
-    margin-top: var(--space-4);
-  }
-  
   .demo-button {
     padding: var(--space-2) var(--space-4);
     font-size: var(--text-sm);
@@ -92,11 +85,20 @@
     border: 1px solid var(--color-border);
     cursor: pointer;
     transition: all var(--transition-fast);
+    position: relative;
+    z-index: 10;
   }
   
   .demo-button:hover {
     color: var(--color-text);
     border-color: var(--color-text-muted);
+  }
+  
+  .upload-actions {
+    position: relative;
+    z-index: 10;
+    margin-top: var(--space-4);
+    pointer-events: auto;
   }
   
   .upload-loading {

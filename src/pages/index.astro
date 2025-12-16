@@ -23,7 +23,7 @@ import ReportView from '../components/ReportView.astro';
     </section>
     
     <!-- Report Section (shown after upload) -->
-    <section class="report-section" id="report-section">
+    <section class="report-section hidden" id="report-section">
       <ReportView />
     </section>
   </main>
@@ -60,10 +60,11 @@ import ReportView from '../components/ReportView.astro';
   const summaryTitle = document.getElementById('summary-title')!;
   const summarySubtitle = document.getElementById('summary-subtitle')!;
   const summaryStats = document.getElementById('summary-stats')!;
+  const quickFindings = document.getElementById('quick-findings')!;
   const analysisProgress = document.getElementById('analysis-progress')!;
   const progressFill = document.getElementById('progress-fill')!;
   const progressText = document.getElementById('progress-text')!;
-  const reportContent = document.getElementById('report-content')!;
+  const bottomSection = document.getElementById('bottom-section')!;
   const previewImage = document.getElementById('preview-image') as HTMLImageElement;
   const overlayCanvas = document.getElementById('overlay-canvas') as HTMLCanvasElement;
   const filename = document.getElementById('filename')!;
@@ -165,32 +166,27 @@ import ReportView from '../components/ReportView.astro';
   
   // Handle file upload
   async function handleFile(file: File) {
-    // Validate file size
     if (file.size > 50 * 1024 * 1024) {
       alert('File too large. Maximum size is 50MB.');
       return;
     }
     
-    // Show loading
     uploadContent.classList.add('hidden');
     uploadLoading.classList.remove('hidden');
     
     try {
-      // Load image
       currentImageFile = await loadImage(file);
       
-      // Show report view
       heroSection.classList.add('hidden');
+      reportSection.classList.remove('hidden');
       reportView.classList.remove('hidden');
-      reportContent.classList.add('hidden');
+      bottomSection.classList.add('hidden');
       analysisProgress.classList.remove('hidden');
       
-      // Set preview
       previewImage.src = currentImageFile.dataUrl;
       filename.textContent = file.name;
       fileMeta.textContent = `${currentImageFile.width}×${currentImageFile.height} · ${formatFileSize(file.size)}`;
       
-      // Run analysis
       currentReport = await runForensicPipeline(currentImageFile, {
         onProgress: (stage, progress) => {
           progressFill.style.width = `${progress}%`;
@@ -198,17 +194,12 @@ import ReportView from '../components/ReportView.astro';
         }
       });
       
-      // Hide progress, show content
       analysisProgress.classList.add('hidden');
-      reportContent.classList.remove('hidden');
+      bottomSection.classList.remove('hidden');
       
-      // Update summary
       updateSummary();
-      
-      // Collect overlays
+      updateQuickFindings();
       collectOverlays();
-      
-      // Render initial tab
       renderTabContent('overview');
       
     } catch (error) {
@@ -220,6 +211,7 @@ import ReportView from '../components/ReportView.astro';
   
   function resetView() {
     heroSection.classList.remove('hidden');
+    reportSection.classList.add('hidden');
     reportView.classList.add('hidden');
     uploadContent.classList.remove('hidden');
     uploadLoading.classList.add('hidden');
@@ -237,14 +229,10 @@ import ReportView from '../components/ReportView.astro';
     
     const { overallStatus, summary } = currentReport;
     
-    // Update banner class
     summaryBanner.className = `summary-banner status-${overallStatus}`;
-    
-    // Update text
     summaryTitle.textContent = getStatusMessage(overallStatus).toLowerCase();
     summarySubtitle.textContent = `${currentReport.checks.length} checks completed`;
     
-    // Update stats
     summaryStats.innerHTML = `
       <div class="stat-item">
         <div class="stat-value" style="color: var(--color-ok)">${summary.okCount}</div>
@@ -261,6 +249,30 @@ import ReportView from '../components/ReportView.astro';
     `;
   }
   
+  function updateQuickFindings() {
+    if (!currentReport) return;
+    
+    const statusColors: Record<string, string> = {
+      ok: 'var(--color-ok)',
+      warn: 'var(--color-warn)',
+      fail: 'var(--color-fail)',
+      info: 'var(--color-info)',
+    };
+    
+    // Show top findings (warnings first, then notable info)
+    const topFindings = [
+      ...currentReport.checks.filter(c => c.status === 'warn'),
+      ...currentReport.checks.filter(c => c.status === 'info').slice(0, 3),
+    ].slice(0, 5);
+    
+    quickFindings.innerHTML = topFindings.map(check => `
+      <div class="quick-finding">
+        <span class="quick-finding-status" style="color: ${statusColors[check.status]}">${check.status}</span>
+        <span class="quick-finding-text">${check.summary.toLowerCase()}</span>
+      </div>
+    `).join('');
+  }
+  
   function collectOverlays() {
     if (!currentReport) return;
     
@@ -272,7 +284,6 @@ import ReportView from '../components/ReportView.astro';
       }
     }
     
-    // Update select options
     overlaySelect.innerHTML = '<option value="none">none</option>';
     
     const overlayNames: Record<string, string> = {
@@ -303,8 +314,6 @@ import ReportView from '../components/ReportView.astro';
     }
     
     const overlayData = overlays.get(selected)!;
-    
-    // Resize canvas to match image display size
     const imageRect = previewImage.getBoundingClientRect();
     
     overlayCanvas.width = overlayData.width;
@@ -349,23 +358,23 @@ import ReportView from '../components/ReportView.astro';
     
     if (warnings.length > 0) {
       html += `<h4 class="section-title">warnings (${warnings.length})</h4>`;
-      warnings.forEach(check => {
-        html += renderCheckCard(check);
-      });
+      html += '<div class="checks-grid">';
+      warnings.forEach(check => html += renderCheckCard(check));
+      html += '</div>';
     }
     
     if (infos.length > 0) {
       html += `<h4 class="section-title" style="margin-top: var(--space-6);">info (${infos.length})</h4>`;
-      infos.forEach(check => {
-        html += renderCheckCard(check);
-      });
+      html += '<div class="checks-grid">';
+      infos.forEach(check => html += renderCheckCard(check));
+      html += '</div>';
     }
     
     if (oks.length > 0) {
       html += `<h4 class="section-title" style="margin-top: var(--space-6);">passed (${oks.length})</h4>`;
-      oks.forEach(check => {
-        html += renderCheckCard(check);
-      });
+      html += '<div class="checks-grid">';
+      oks.forEach(check => html += renderCheckCard(check));
+      html += '</div>';
     }
     
     tabContent.innerHTML = html;
@@ -382,10 +391,9 @@ import ReportView from '../components/ReportView.astro';
       return;
     }
     
-    let html = '';
-    metadataChecks.forEach(check => {
-      html += renderCheckCard(check, true);
-    });
+    let html = '<div class="checks-grid">';
+    metadataChecks.forEach(check => html += renderCheckCard(check, true));
+    html += '</div>';
     
     tabContent.innerHTML = html;
     attachCheckCardListeners();
@@ -402,10 +410,9 @@ import ReportView from '../components/ReportView.astro';
       return;
     }
     
-    let html = '';
-    forensicChecks.forEach(check => {
-      html += renderCheckCard(check, true);
-    });
+    let html = '<div class="checks-grid">';
+    forensicChecks.forEach(check => html += renderCheckCard(check, true));
+    html += '</div>';
     
     tabContent.innerHTML = html;
     attachCheckCardListeners();
@@ -417,7 +424,7 @@ import ReportView from '../components/ReportView.astro';
     let html = `
       <div style="margin-bottom: var(--space-4);">
         <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
-          use the overlay controls below the image to visualize analysis results.
+          use the overlay controls above the tabs to visualize analysis results.
         </p>
       </div>
     `;
@@ -426,9 +433,9 @@ import ReportView from '../components/ReportView.astro';
       html += `<div class="empty-state"><p>no overlays available</p></div>`;
     } else {
       html += `<h4 class="section-title">available overlays</h4>`;
-      visualChecks.forEach(check => {
-        html += renderCheckCard(check);
-      });
+      html += '<div class="checks-grid">';
+      visualChecks.forEach(check => html += renderCheckCard(check));
+      html += '</div>';
     }
     
     tabContent.innerHTML = html;
@@ -436,32 +443,25 @@ import ReportView from '../components/ReportView.astro';
   }
   
   function renderCheckCard(check: CheckResult, expanded = false): string {
-    const statusColors = {
+    const statusColors: Record<string, string> = {
       ok: 'var(--color-ok)',
       warn: 'var(--color-warn)',
       fail: 'var(--color-fail)',
       info: 'var(--color-info)',
     };
     
-    const statusLabels = {
-      ok: 'ok',
-      warn: 'warn',
-      fail: 'fail',
-      info: 'info',
-    };
-    
     const detailsHtml = Object.entries(check.details)
       .map(([key, value]) => `
         <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--color-border);">
-          <span style="color: var(--color-text-muted); font-size: 13px;">${key}</span>
-          <span style="font-family: var(--font-mono); font-size: 13px; color: var(--color-text-secondary);">${value ?? '—'}</span>
+          <span style="color: var(--color-text-muted); font-size: 12px;">${key}</span>
+          <span style="font-family: var(--font-mono); font-size: 12px; color: var(--color-text-secondary);">${value ?? '—'}</span>
         </div>
       `).join('');
     
     return `
       <div class="check-card ${expanded ? 'expanded' : ''}">
         <div class="check-header" tabindex="0" role="button" aria-expanded="${expanded}">
-          <span class="check-badge" style="color: ${statusColors[check.status]}; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">${statusLabels[check.status]}</span>
+          <span class="check-badge" style="color: ${statusColors[check.status]}; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">${check.status}</span>
           <div class="check-info">
             <div class="check-name">${check.name.toLowerCase()}</div>
             <div class="check-summary">${check.summary.toLowerCase()}</div>
@@ -515,7 +515,6 @@ import ReportView from '../components/ReportView.astro';
     padding-bottom: var(--space-10);
   }
   
-  /* Hero */
   .hero {
     max-width: var(--container-narrow);
     margin-inline: auto;
@@ -539,7 +538,6 @@ import ReportView from '../components/ReportView.astro';
     max-width: 400px;
   }
   
-  /* Report Section */
   .report-section {
     max-width: var(--container-max);
     margin-inline: auto;
