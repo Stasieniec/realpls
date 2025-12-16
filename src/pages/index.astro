@@ -6,57 +6,20 @@ import UploadArea from '../components/UploadArea.astro';
 import ReportView from '../components/ReportView.astro';
 ---
 
-<Layout title="realpls — Quick, local image authenticity checks">
+<Layout title="real pls — image authenticity checks">
   <Header />
   
   <main class="main container">
     <!-- Hero Section (shown before upload) -->
     <section class="hero" id="hero-section">
       <div class="hero-content">
-        <h1 class="hero-title">
-          Quick image authenticity checks
-        </h1>
+        <h1 class="hero-title">image authenticity checks</h1>
         <p class="hero-subtitle">
-          Analyze images for potential manipulation directly in your browser. 
-          No uploads, no tracking, complete privacy.
+          analyze images locally in your browser. no uploads, no tracking.
         </p>
       </div>
       
       <UploadArea />
-      
-      <div class="features">
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Instant Analysis</h3>
-          <p class="feature-text">Results in seconds, all processing happens locally</p>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">100% Private</h3>
-          <p class="feature-text">Your images never leave your device</p>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Multiple Checks</h3>
-          <p class="feature-text">Metadata, compression, pixel analysis & more</p>
-        </div>
-      </div>
     </section>
     
     <!-- Report Section (shown after upload) -->
@@ -94,7 +57,6 @@ import ReportView from '../components/ReportView.astro';
   
   // Report elements
   const summaryBanner = document.getElementById('summary-banner')!;
-  const summaryIcon = document.getElementById('summary-icon')!;
   const summaryTitle = document.getElementById('summary-title')!;
   const summarySubtitle = document.getElementById('summary-subtitle')!;
   const summaryStats = document.getElementById('summary-stats')!;
@@ -186,7 +148,7 @@ import ReportView from '../components/ReportView.astro';
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `forensic-report-${currentReport.filename}.json`;
+      a.download = `report-${currentReport.filename}.json`;
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -226,13 +188,13 @@ import ReportView from '../components/ReportView.astro';
       // Set preview
       previewImage.src = currentImageFile.dataUrl;
       filename.textContent = file.name;
-      fileMeta.textContent = `${currentImageFile.width}×${currentImageFile.height} • ${formatFileSize(file.size)}`;
+      fileMeta.textContent = `${currentImageFile.width}×${currentImageFile.height} · ${formatFileSize(file.size)}`;
       
       // Run analysis
       currentReport = await runForensicPipeline(currentImageFile, {
         onProgress: (stage, progress) => {
           progressFill.style.width = `${progress}%`;
-          progressText.textContent = stage;
+          progressText.textContent = stage.toLowerCase();
         }
       });
       
@@ -265,7 +227,7 @@ import ReportView from '../components/ReportView.astro';
     currentReport = null;
     currentImageFile = null;
     overlays.clear();
-    overlaySelect.innerHTML = '<option value="none">None</option>';
+    overlaySelect.innerHTML = '<option value="none">none</option>';
     overlayCanvas.classList.add('hidden');
     overlayControls.classList.add('hidden');
   }
@@ -278,39 +240,23 @@ import ReportView from '../components/ReportView.astro';
     // Update banner class
     summaryBanner.className = `summary-banner status-${overallStatus}`;
     
-    // Update icon
-    const icons = {
-      clean: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 12l2 2 4-4" stroke="var(--color-ok)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="12" cy="12" r="9" stroke="var(--color-ok)" stroke-width="2"/>
-      </svg>`,
-      review: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 9v2m0 4h.01M12 3l9.196 15H2.804L12 3z" stroke="var(--color-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`,
-      suspicious: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="9" stroke="var(--color-fail)" stroke-width="2"/>
-        <path d="M15 9l-6 6m0-6l6 6" stroke="var(--color-fail)" stroke-width="2" stroke-linecap="round"/>
-      </svg>`
-    };
-    summaryIcon.innerHTML = icons[overallStatus];
-    
     // Update text
-    summaryTitle.textContent = getStatusMessage(overallStatus);
+    summaryTitle.textContent = getStatusMessage(overallStatus).toLowerCase();
     summarySubtitle.textContent = `${currentReport.checks.length} checks completed`;
     
     // Update stats
     summaryStats.innerHTML = `
       <div class="stat-item">
         <div class="stat-value" style="color: var(--color-ok)">${summary.okCount}</div>
-        <div class="stat-label">OK</div>
+        <div class="stat-label">ok</div>
       </div>
       <div class="stat-item">
         <div class="stat-value" style="color: var(--color-warn)">${summary.warnCount}</div>
-        <div class="stat-label">Warn</div>
+        <div class="stat-label">warn</div>
       </div>
       <div class="stat-item">
         <div class="stat-value" style="color: var(--color-info)">${summary.infoCount}</div>
-        <div class="stat-label">Info</div>
+        <div class="stat-label">info</div>
       </div>
     `;
   }
@@ -327,12 +273,12 @@ import ReportView from '../components/ReportView.astro';
     }
     
     // Update select options
-    overlaySelect.innerHTML = '<option value="none">None</option>';
+    overlaySelect.innerHTML = '<option value="none">none</option>';
     
     const overlayNames: Record<string, string> = {
-      'noise-consistency': 'Noise Map',
-      'edge-consistency': 'Edge Map',
-      'ela': 'Error Level Analysis',
+      'noise-consistency': 'noise map',
+      'edge-consistency': 'edge map',
+      'ela': 'error level analysis',
     };
     
     for (const [id] of overlays) {
@@ -360,7 +306,6 @@ import ReportView from '../components/ReportView.astro';
     
     // Resize canvas to match image display size
     const imageRect = previewImage.getBoundingClientRect();
-    const containerRect = previewImage.parentElement!.getBoundingClientRect();
     
     overlayCanvas.width = overlayData.width;
     overlayCanvas.height = overlayData.height;
@@ -396,7 +341,6 @@ import ReportView from '../components/ReportView.astro';
   }
   
   function renderOverviewTab(checks: CheckResult[]) {
-    // Show all checks grouped by status
     const warnings = checks.filter(c => c.status === 'warn');
     const infos = checks.filter(c => c.status === 'info');
     const oks = checks.filter(c => c.status === 'ok');
@@ -404,21 +348,21 @@ import ReportView from '../components/ReportView.astro';
     let html = '';
     
     if (warnings.length > 0) {
-      html += `<h4 style="margin-bottom: var(--space-3); color: var(--color-warn);">Warnings (${warnings.length})</h4>`;
+      html += `<h4 class="section-title">warnings (${warnings.length})</h4>`;
       warnings.forEach(check => {
         html += renderCheckCard(check);
       });
     }
     
     if (infos.length > 0) {
-      html += `<h4 style="margin: var(--space-4) 0 var(--space-3); color: var(--color-info);">Information (${infos.length})</h4>`;
+      html += `<h4 class="section-title" style="margin-top: var(--space-6);">info (${infos.length})</h4>`;
       infos.forEach(check => {
         html += renderCheckCard(check);
       });
     }
     
     if (oks.length > 0) {
-      html += `<h4 style="margin: var(--space-4) 0 var(--space-3); color: var(--color-ok);">Passed (${oks.length})</h4>`;
+      html += `<h4 class="section-title" style="margin-top: var(--space-6);">passed (${oks.length})</h4>`;
       oks.forEach(check => {
         html += renderCheckCard(check);
       });
@@ -434,7 +378,7 @@ import ReportView from '../components/ReportView.astro';
     );
     
     if (metadataChecks.length === 0) {
-      tabContent.innerHTML = renderEmptyState('No metadata checks available');
+      tabContent.innerHTML = renderEmptyState('no metadata checks available');
       return;
     }
     
@@ -454,7 +398,7 @@ import ReportView from '../components/ReportView.astro';
     );
     
     if (forensicChecks.length === 0) {
-      tabContent.innerHTML = renderEmptyState('No forensic checks available');
+      tabContent.innerHTML = renderEmptyState('no forensic checks available');
       return;
     }
     
@@ -472,21 +416,16 @@ import ReportView from '../components/ReportView.astro';
     
     let html = `
       <div style="margin-bottom: var(--space-4);">
-        <p style="color: var(--color-text-secondary); font-size: var(--text-sm);">
-          Use the overlay controls below the image to visualize different analysis results.
-          Adjust the opacity slider to see the overlay over the original image.
+        <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+          use the overlay controls below the image to visualize analysis results.
         </p>
       </div>
     `;
     
     if (visualChecks.length === 0) {
-      html += `
-        <div class="empty-state">
-          <p>No visual overlays available for this image.</p>
-        </div>
-      `;
+      html += `<div class="empty-state"><p>no overlays available</p></div>`;
     } else {
-      html += `<h4 style="margin-bottom: var(--space-3);">Available Overlays</h4>`;
+      html += `<h4 class="section-title">available overlays</h4>`;
       visualChecks.forEach(check => {
         html += renderCheckCard(check);
       });
@@ -497,37 +436,44 @@ import ReportView from '../components/ReportView.astro';
   }
   
   function renderCheckCard(check: CheckResult, expanded = false): string {
-    const statusIcons = {
-      ok: `<span class="check-badge" style="background: var(--color-ok-bg); color: var(--color-ok); padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 500;">OK</span>`,
-      warn: `<span class="check-badge" style="background: var(--color-warn-bg); color: var(--color-warn); padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 500;">Warning</span>`,
-      fail: `<span class="check-badge" style="background: var(--color-fail-bg); color: var(--color-fail); padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 500;">Issue</span>`,
-      info: `<span class="check-badge" style="background: var(--color-info-bg); color: var(--color-info); padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 500;">Info</span>`,
+    const statusColors = {
+      ok: 'var(--color-ok)',
+      warn: 'var(--color-warn)',
+      fail: 'var(--color-fail)',
+      info: 'var(--color-info)',
+    };
+    
+    const statusLabels = {
+      ok: 'ok',
+      warn: 'warn',
+      fail: 'fail',
+      info: 'info',
     };
     
     const detailsHtml = Object.entries(check.details)
       .map(([key, value]) => `
-        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--color-border);">
+        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--color-border);">
           <span style="color: var(--color-text-muted); font-size: 13px;">${key}</span>
-          <span style="font-family: var(--font-mono); font-size: 13px;">${value ?? '—'}</span>
+          <span style="font-family: var(--font-mono); font-size: 13px; color: var(--color-text-secondary);">${value ?? '—'}</span>
         </div>
       `).join('');
     
     return `
       <div class="check-card ${expanded ? 'expanded' : ''}">
         <div class="check-header" tabindex="0" role="button" aria-expanded="${expanded}">
-          ${statusIcons[check.status]}
+          <span class="check-badge" style="color: ${statusColors[check.status]}; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">${statusLabels[check.status]}</span>
           <div class="check-info">
-            <div class="check-name">${check.name}</div>
-            <div class="check-summary">${check.summary}</div>
+            <div class="check-name">${check.name.toLowerCase()}</div>
+            <div class="check-summary">${check.summary.toLowerCase()}</div>
           </div>
-          <svg class="check-expand" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg class="check-expand" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div class="check-details">
           ${detailsHtml}
           <div class="confidence-bar">
-            <label>Confidence:</label>
+            <label>confidence</label>
             <div class="confidence-track">
               <div class="confidence-fill" style="width: ${check.confidence * 100}%"></div>
             </div>
@@ -540,16 +486,7 @@ import ReportView from '../components/ReportView.astro';
   }
   
   function renderEmptyState(message: string): string {
-    return `
-      <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
-          <path d="M24 16V26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="24" cy="32" r="1.5" fill="currentColor"/>
-        </svg>
-        <p>${message}</p>
-      </div>
-    `;
+    return `<div class="empty-state"><p>${message}</p></div>`;
   }
   
   function attachCheckCardListeners() {
@@ -574,7 +511,7 @@ import ReportView from '../components/ReportView.astro';
 <style>
   .main {
     flex: 1;
-    padding-top: var(--space-10);
+    padding-top: var(--space-20);
     padding-bottom: var(--space-10);
   }
   
@@ -585,74 +522,21 @@ import ReportView from '../components/ReportView.astro';
   }
   
   .hero-content {
-    text-align: center;
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-12);
   }
   
   .hero-title {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl));
+    font-weight: 500;
+    letter-spacing: -0.03em;
     margin-bottom: var(--space-4);
-    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-text);
   }
   
   .hero-subtitle {
     font-size: var(--text-lg);
-    color: var(--color-text-secondary);
-    max-width: 480px;
-    margin-inline: auto;
-    line-height: var(--leading-relaxed);
-  }
-  
-  /* Features */
-  .features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-6);
-    margin-top: var(--space-12);
-  }
-  
-  .feature {
-    text-align: center;
-    padding: var(--space-6);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    transition: all var(--transition-normal);
-  }
-  
-  .feature:hover {
-    border-color: var(--color-border-subtle);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  .feature-icon {
-    width: 48px;
-    height: 48px;
-    margin-inline: auto;
-    margin-bottom: var(--space-4);
-    color: var(--color-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-accent-subtle);
-    border-radius: var(--radius-lg);
-  }
-  
-  .feature-title {
-    font-size: var(--text-base);
-    font-weight: 600;
-    margin-bottom: var(--space-2);
-  }
-  
-  .feature-text {
-    font-size: var(--text-sm);
     color: var(--color-text-muted);
+    max-width: 400px;
   }
   
   /* Report Section */
@@ -665,4 +549,3 @@ import ReportView from '../components/ReportView.astro';
     display: none !important;
   }
 </style>
-

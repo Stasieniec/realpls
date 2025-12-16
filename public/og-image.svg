@@ -1,22 +1,12 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#fafaf9"/>
-  <rect x="80" y="80" width="1040" height="470" rx="16" fill="#ffffff" stroke="#e7e5e4" stroke-width="2"/>
+  <rect width="1200" height="630" fill="#000000"/>
   
   <!-- Logo -->
-  <rect x="120" y="120" width="56" height="56" rx="12" fill="#0d9488"/>
-  <path d="M136 148L146 158L168 136" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  
-  <text x="190" y="163" font-family="system-ui, sans-serif" font-size="40" font-weight="600" fill="#1c1917">realpls</text>
+  <text x="100" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="120" font-weight="500" fill="#ffffff" letter-spacing="-6">real pls</text>
   
   <!-- Tagline -->
-  <text x="120" y="260" font-family="system-ui, sans-serif" font-size="56" font-weight="600" fill="#1c1917">Quick, local image</text>
-  <text x="120" y="330" font-family="system-ui, sans-serif" font-size="56" font-weight="600" fill="#1c1917">authenticity checks</text>
-  
-  <!-- Description -->
-  <text x="120" y="420" font-family="system-ui, sans-serif" font-size="24" fill="#57534e">Analyze images for potential manipulation directly in your browser.</text>
-  <text x="120" y="460" font-family="system-ui, sans-serif" font-size="24" fill="#57534e">No uploads, no tracking, complete privacy.</text>
+  <text x="100" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="400" fill="#666666">quick, local image authenticity checks</text>
   
   <!-- URL -->
-  <text x="120" y="520" font-family="system-ui, sans-serif" font-size="20" fill="#0d9488">realpls.com</text>
+  <text x="100" y="540" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="400" fill="#444444">realpls.com</text>
 </svg>
-

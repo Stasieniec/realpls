@@ -9,24 +9,20 @@ const currentPath = Astro.url.pathname;
 
 <header class="header">
   <div class="header-inner container">
-    <a href="/" class="logo" aria-label="realpls home">
-      <svg class="logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="28" height="28" rx="6" fill="currentColor" class="logo-bg"/>
-        <path d="M7 14L11 18L21 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="logo-text">realpls</span>
+    <a href="/" class="logo" aria-label="real pls home">
+      <span class="logo-text">real pls</span>
     </a>
     
     {showNav && (
       <nav class="nav" aria-label="Main navigation">
         <a href="/" class:list={["nav-link", { active: currentPath === "/" }]}>
-          Analyze
+          analyze
         </a>
         <a href="/about" class:list={["nav-link", { active: currentPath === "/about" }]}>
-          About
+          about
         </a>
         <a href="/privacy" class:list={["nav-link", { active: currentPath === "/privacy" }]}>
-          Privacy
+          privacy
         </a>
       </nav>
     )}
@@ -40,83 +36,62 @@ const currentPath = Astro.url.pathname;
     z-index: 100;
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    backdrop-filter: blur(8px);
-    background: rgba(250, 250, 249, 0.9);
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    .header {
-      background: rgba(12, 10, 9, 0.9);
-    }
   }
   
   .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: 60px;
   }
   
   .logo {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
     color: var(--color-text);
     text-decoration: none;
-    transition: opacity var(--transition-fast);
+    border: none;
   }
   
   .logo:hover {
-    opacity: 0.8;
-    text-decoration: none;
-  }
-  
-  .logo-icon {
-    color: var(--color-accent);
+    opacity: 0.7;
   }
   
   .logo-text {
-    font-size: var(--text-xl);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    letter-spacing: -0.03em;
   }
   
   .nav {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-6);
   }
   
   .nav-link {
-    padding: var(--space-2) var(--space-4);
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
     font-size: var(--text-sm);
-    font-weight: 500;
     text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
+    border: none;
+    transition: color var(--transition-fast);
   }
   
   .nav-link:hover {
     color: var(--color-text);
-    background: var(--color-bg-subtle);
-    text-decoration: none;
   }
   
   .nav-link.active {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    color: var(--color-text);
   }
   
   @media (max-width: 640px) {
     .nav {
-      gap: 0;
+      gap: var(--space-4);
     }
     
     .nav-link {
-      padding: var(--space-2) var(--space-3);
       font-size: var(--text-xs);
     }
   }
 </style>
-

@@ -1,0 +1,10 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="600" fill="#000000"/>
+  
+  <!-- Logo centered -->
+  <text x="600" y="280" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="120" font-weight="500" fill="#ffffff" letter-spacing="-6">real pls</text>
+  
+  <!-- Tagline -->
+  <text x="600" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400" fill="#666666">quick, local image authenticity checks</text>
+</svg>
+

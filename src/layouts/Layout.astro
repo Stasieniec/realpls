@@ -6,11 +6,11 @@ interface Props {
 
 const { 
   title, 
-  description = "Quick, local image authenticity checks. Analyze images for potential manipulation directly in your browser - no uploads, complete privacy." 
+  description = "Quick, local image authenticity checks. Analyze images for potential manipulation directly in your browser — no uploads, complete privacy." 
 } = Astro.props;
 
 const siteUrl = "https://realpls.com";
-const ogImage = `${siteUrl}/og-image.svg`;
+const siteName = "real pls";
 ---
 
 <!doctype html>
@@ -22,25 +22,55 @@ const ogImage = `${siteUrl}/og-image.svg`;
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={`${siteUrl}/og-image.svg`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={`${siteUrl}/twitter-image.svg`} />
     
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#0d9488" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="author" content="swasilewski.com" />
+    <meta name="keywords" content="image forensics, image analysis, image authenticity, ELA, error level analysis, metadata, EXIF, photo verification, fake image detection, image manipulation" />
     <link rel="canonical" href={siteUrl} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": siteName,
+      "url": siteUrl,
+      "description": description,
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "swasilewski.com",
+        "url": "https://swasilewski.com"
+      }
+    })} />
     
     <title>{title}</title>
   </head>
@@ -60,4 +90,3 @@ const ogImage = `${siteUrl}/og-image.svg`;
     min-height: 100vh;
   }
 </style>
-

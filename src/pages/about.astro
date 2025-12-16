@@ -4,200 +4,131 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<Layout title="About — realpls" description="Learn what realpls does, how the forensic checks work, and their limitations.">
+<Layout title="about — real pls" description="Learn what real pls does, how the forensic checks work, and their limitations.">
   <Header />
   
   <main class="main container container-narrow">
     <article class="content">
       <header class="content-header">
-        <h1>About realpls</h1>
+        <h1>about</h1>
         <p class="lead">
-          A lightweight, browser-based tool for quick image authenticity checks.
-          No uploads, no AI, no magic — just practical forensic heuristics.
+          a lightweight, browser-based tool for quick image authenticity checks.
+          no uploads, no ai, no magic — just practical forensic heuristics.
         </p>
       </header>
       
       <section class="section">
-        <h2>What this tool does</h2>
+        <h2>what this tool does</h2>
         <p>
-          realpls runs a series of forensic checks on images to help identify potential signs of manipulation. 
-          These checks analyze metadata, compression artifacts, and pixel-level patterns that may indicate editing.
+          real pls runs a series of forensic checks on images to help identify potential signs of manipulation. 
+          these checks analyze metadata, compression artifacts, and pixel-level patterns that may indicate editing.
         </p>
         <p>
-          All processing happens entirely in your browser. Your images never leave your device, and there's 
+          all processing happens entirely in your browser. your images never leave your device, and there's 
           no server-side component involved in the analysis.
         </p>
       </section>
       
       <section class="section">
-        <h2>What this tool does NOT do</h2>
+        <h2>what this tool does not do</h2>
         <div class="warning-box">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 9v2m0 4h.01M12 3l9.196 15H2.804L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div>
-            <p><strong>This is not a lie detector for images.</strong></p>
-            <p>
-              realpls cannot definitively prove whether an image is "real" or "fake." No tool can do this 
-              with certainty. The checks here provide signals that may warrant further investigation, but 
-              they are not conclusive evidence of manipulation.
-            </p>
-          </div>
+          <p><strong>this is not a lie detector for images.</strong></p>
+          <p>
+            real pls cannot definitively prove whether an image is "real" or "fake." no tool can do this 
+            with certainty. the checks here provide signals that may warrant further investigation, but 
+            they are not conclusive evidence of manipulation.
+          </p>
         </div>
         
         <ul class="list">
-          <li><strong>No AI/ML detection</strong> — We don't use machine learning models to detect AI-generated images</li>
-          <li><strong>No deepfake detection</strong> — This tool cannot identify synthetic faces or AI-generated content</li>
-          <li><strong>Not forensically admissible</strong> — Results should not be used as legal evidence</li>
-          <li><strong>No absolute certainty</strong> — Every check has limitations and false positive/negative rates</li>
+          <li>no ai/ml detection — we don't use machine learning models</li>
+          <li>no deepfake detection — cannot identify synthetic faces</li>
+          <li>not forensically admissible — results should not be used as legal evidence</li>
+          <li>no absolute certainty — every check has limitations</li>
         </ul>
       </section>
       
       <section class="section">
-        <h2>The Checks</h2>
-        <p>
-          Here's an overview of each forensic check, what it looks for, and its limitations:
-        </p>
+        <h2>the checks</h2>
         
         <div class="check-explainer">
-          <h3>File Type Detection</h3>
+          <h3>file type detection</h3>
           <p>
-            Verifies the actual file format by reading the first bytes (magic numbers) and comparing with 
-            the declared file type and extension.
+            verifies the actual file format by reading magic bytes and comparing with 
+            the declared type and extension.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> A mismatch doesn't necessarily indicate manipulation — files can be 
-            renamed legitimately. Conversely, a match doesn't prove authenticity.
+            a mismatch doesn't necessarily indicate manipulation.
           </p>
         </div>
         
         <div class="check-explainer">
-          <h3>EXIF Metadata Analysis</h3>
+          <h3>exif metadata analysis</h3>
           <p>
-            Extracts and analyzes EXIF data including camera make/model, software tags, timestamps, and GPS 
-            coordinates. Flags known editing software signatures.
+            extracts and analyzes exif data including camera make/model, software tags, timestamps, and gps 
+            coordinates. flags known editing software signatures.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> EXIF can be easily modified, copied, or stripped. Missing EXIF is 
-            extremely common after social media sharing and doesn't indicate manipulation. Presence of editing 
-            software in metadata doesn't mean malicious editing occurred — photographers commonly use editing software.
+            exif can be easily modified or stripped. missing exif is common after social media sharing.
           </p>
         </div>
         
         <div class="check-explainer">
-          <h3>JPEG Quality Estimation</h3>
+          <h3>jpeg quality estimation</h3>
           <p>
-            Analyzes the JPEG quantization tables to estimate the compression quality level used when saving.
+            analyzes the jpeg quantization tables to estimate the compression quality level.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> This is a rough estimate only. Low quality doesn't indicate manipulation — 
-            it's common for web images. Different encoders produce different tables at the same "quality" setting.
+            this is a rough estimate. low quality doesn't indicate manipulation.
           </p>
         </div>
         
         <div class="check-explainer">
-          <h3>Block Boundary Analysis</h3>
+          <h3>noise consistency analysis</h3>
           <p>
-            Examines 8×8 pixel block boundaries characteristic of JPEG compression. Unusual patterns may suggest 
-            recompression or editing.
-          </p>
-          <p class="limitation">
-            <strong>Limitations:</strong> Marked as experimental. Strong block boundaries occur naturally in 
-            lower-quality JPEGs. Many false positives possible. Results should be interpreted with extreme caution.
-          </p>
-        </div>
-        
-        <div class="check-explainer">
-          <h3>Noise Consistency Analysis</h3>
-          <p>
-            Analyzes texture/noise patterns across the image using Laplacian filtering. Regions with significantly 
+            analyzes texture/noise patterns across the image. regions with significantly 
             different noise characteristics may indicate compositing.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> Natural images often have varying noise levels (e.g., sky vs. foliage). 
-            JPEG compression also affects noise distribution. High sensitivity leads to false positives on 
-            legitimate images.
+            natural images often have varying noise levels. high sensitivity leads to false positives.
           </p>
         </div>
         
         <div class="check-explainer">
-          <h3>Edge Analysis</h3>
+          <h3>clone detection</h3>
           <p>
-            Detects edge strength throughout the image. Unusually sharp edges around specific regions might 
-            indicate cut-and-paste operations.
+            uses block hashing to find repeated regions that are spatially separated.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> Sharp edges are common in high-contrast photos, text, graphics, 
-            and many legitimate image types. This check has a high false positive rate.
+            patterns and textures cause false positives. cannot detect all types of cloning.
           </p>
         </div>
         
         <div class="check-explainer">
-          <h3>Clone Detection</h3>
+          <h3>error level analysis (ela)</h3>
           <p>
-            Uses block hashing to find repeated regions that are spatially separated, which might indicate 
-            copy-paste editing (clone stamp tool).
-          </p>
-          <p class="limitation">
-            <strong>Limitations:</strong> Patterns, textures, and naturally repeating elements cause false 
-            positives. The "quick" scan uses larger blocks and may miss subtle cloning. Even the "deep scan" 
-            cannot detect all types of cloning.
-          </p>
-        </div>
-        
-        <div class="check-explainer">
-          <h3>Error Level Analysis (ELA)</h3>
-          <p>
-            Re-encodes the image as JPEG and compares error levels. Areas that have been modified more recently 
+            re-encodes the image as jpeg and compares error levels. areas modified more recently 
             may show different error levels.
           </p>
           <p class="limitation">
-            <strong>Limitations:</strong> ELA is notorious for producing misleading results. Multiple resaves, 
-            social media reuploads, and different content types (text vs. photos) all affect ELA results. 
-            This check is informational only and should never be used as evidence of manipulation.
-          </p>
-        </div>
-        
-        <div class="check-explainer">
-          <h3>Social Media Detection</h3>
-          <p>
-            Looks for patterns common in social media reuploads: missing EXIF, specific dimension limits, 
-            and recompression artifacts.
-          </p>
-          <p class="limitation">
-            <strong>Limitations:</strong> This is purely informational and does not indicate manipulation. 
-            Many legitimate images pass through social media. False positives and negatives are common.
+            ela is notorious for misleading results. should never be used as evidence of manipulation.
           </p>
         </div>
       </section>
       
       <section class="section">
-        <h2>Best Practices</h2>
+        <h2>best practices</h2>
         <ul class="list">
-          <li>Use multiple signals together — no single check is conclusive</li>
-          <li>Consider the image's history and context</li>
-          <li>Remember that sophisticated edits may evade all these checks</li>
-          <li>When in doubt, consult a professional forensic analyst</li>
-          <li>Never make accusations based solely on these results</li>
+          <li>use multiple signals together — no single check is conclusive</li>
+          <li>consider the image's history and context</li>
+          <li>sophisticated edits may evade all checks</li>
+          <li>when in doubt, consult a professional</li>
+          <li>never make accusations based solely on these results</li>
         </ul>
       </section>
       
-      <section class="section">
-        <h2>Technical Details</h2>
-        <p>
-          realpls is built with Astro and TypeScript, running entirely in the browser using standard web APIs 
-          (Canvas, FileReader, ImageData). For EXIF parsing, we use the 
-          <a href="https://github.com/MikeKovaworker/exifr" target="_blank" rel="noopener noreferrer">exifr</a> 
-          library.
-        </p>
-        <p>
-          The source code is designed to be readable and educational. Each check module explains its approach 
-          and limitations in comments.
-        </p>
-      </section>
-      
       <div class="back-link">
-        <a href="/">← Back to analyzer</a>
+        <a href="/">← back to analyzer</a>
       </div>
     </article>
   </main>
@@ -208,30 +139,18 @@ import Footer from '../components/Footer.astro';
 <style>
   .main {
     flex: 1;
-    padding-top: var(--space-10);
+    padding-top: var(--space-16);
     padding-bottom: var(--space-10);
   }
   
-  .content {
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-    padding: var(--space-10);
-  }
-  
-  @media (max-width: 640px) {
-    .content {
-      padding: var(--space-6);
-    }
-  }
-  
   .content-header {
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-12);
     padding-bottom: var(--space-8);
     border-bottom: 1px solid var(--color-border);
   }
   
   .content-header h1 {
+    font-size: var(--text-3xl);
     margin-bottom: var(--space-4);
   }
   
@@ -246,7 +165,7 @@ import Footer from '../components/Footer.astro';
   }
   
   .section h2 {
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
@@ -258,26 +177,23 @@ import Footer from '../components/Footer.astro';
   }
   
   .warning-box {
-    display: flex;
-    gap: var(--space-4);
     padding: var(--space-4);
-    background: var(--color-warn-bg);
     border: 1px solid var(--color-warn);
-    border-radius: var(--radius-md);
+    background: var(--color-warn-bg);
     margin-bottom: var(--space-6);
-  }
-  
-  .warning-box svg {
-    flex-shrink: 0;
-    color: var(--color-warn);
   }
   
   .warning-box p {
     margin-bottom: var(--space-2);
+    color: var(--color-text-secondary);
   }
   
   .warning-box p:last-child {
     margin-bottom: 0;
+  }
+  
+  .warning-box strong {
+    color: var(--color-text);
   }
   
   .list {
@@ -287,37 +203,35 @@ import Footer from '../components/Footer.astro';
   
   .list li {
     position: relative;
-    padding-left: var(--space-6);
+    padding-left: var(--space-5);
     margin-bottom: var(--space-3);
     line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
   }
   
   .list li::before {
-    content: '';
+    content: '·';
     position: absolute;
     left: 0;
-    top: 0.6em;
-    width: 6px;
-    height: 6px;
-    background: var(--color-accent);
-    border-radius: 50%;
+    color: var(--color-text-muted);
   }
   
   .check-explainer {
-    padding: var(--space-5);
-    background: var(--color-bg-subtle);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--space-3);
   }
   
   .check-explainer h3 {
     font-size: var(--text-base);
+    font-weight: 500;
     margin-bottom: var(--space-2);
   }
   
   .check-explainer p {
     font-size: var(--text-sm);
     margin-bottom: var(--space-2);
+    color: var(--color-text-secondary);
   }
   
   .check-explainer p:last-child {
@@ -325,12 +239,8 @@ import Footer from '../components/Footer.astro';
   }
   
   .limitation {
-    color: var(--color-text-muted);
+    color: var(--color-text-muted) !important;
     font-style: italic;
-  }
-  
-  .limitation strong {
-    font-style: normal;
   }
   
   .back-link {
@@ -340,10 +250,12 @@ import Footer from '../components/Footer.astro';
   }
   
   .back-link a {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-weight: 500;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    border: none;
+  }
+  
+  .back-link a:hover {
+    color: var(--color-text);
   }
 </style>
-
